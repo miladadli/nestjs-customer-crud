@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsDateString, IsNotEmpty, IsMobilePhone } from 'class-validator';
+import { IsString, IsEmail, IsDateString, IsNotEmpty, IsMobilePhone, MinLength, MaxLength, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCustomerDto {
@@ -10,6 +10,11 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(100)
+  @Matches(/^[a-zA-Z\s]+$/, {
+    message: 'First name must contain only letters and spaces',
+  })
   firstName: string;
 
   @ApiProperty({
@@ -20,6 +25,11 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(100)
+  @Matches(/^[a-zA-Z\s]+$/, {
+    message: 'Last name must contain only letters and spaces',
+  })
   lastName: string;
 
   @ApiProperty({
@@ -51,5 +61,10 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(17)
+  @Matches(/^\d+$/, {
+    message: 'Bank account number must contain only digits',
+  })
   bankAccountNumber: string;
 } 
