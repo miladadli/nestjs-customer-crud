@@ -36,7 +36,11 @@ export class Customer {
     this.updatedAt = updatedAt || new Date();
   }
 
-  private validate(firstName: string, lastName: string, dateOfBirth: Date): void {
+  private validate(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: Date,
+  ): void {
     if (!firstName || firstName.trim().length === 0) {
       throw new Error('First name cannot be empty');
     }
@@ -59,7 +63,10 @@ export class Customer {
     const today = new Date();
     let age = today.getFullYear() - dateOfBirth.getFullYear();
     const monthDiff = today.getMonth() - dateOfBirth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dateOfBirth.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < dateOfBirth.getDate())
+    ) {
       age--;
     }
     return age;
@@ -116,7 +123,6 @@ export class Customer {
     email: Email,
     bankAccountNumber: BankAccount,
   ): Customer {
-    // Let DB generate the id
     return new Customer(
       undefined,
       firstName,
@@ -127,4 +133,4 @@ export class Customer {
       bankAccountNumber,
     );
   }
-} 
+}

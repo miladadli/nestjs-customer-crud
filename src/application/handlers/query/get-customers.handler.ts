@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { GetCustomersQuery, GetCustomerByIdQuery, GetCustomerByEmailQuery, PaginatedCustomersResult } from '../../queries/get-customers.query';
+import {
+  GetCustomersQuery,
+  GetCustomerByIdQuery,
+  GetCustomerByEmailQuery,
+  PaginatedCustomersResult,
+} from '../../queries/get-customers.query';
 import { ICustomerRepository } from '../../../domain/repositories/customer.repository.interface';
 import { Customer } from '../../../domain/entities/customer.entity';
 
@@ -28,7 +33,9 @@ export class GetCustomersHandler implements IQueryHandler<GetCustomersQuery> {
 
 @Injectable()
 @QueryHandler(GetCustomerByIdQuery)
-export class GetCustomerByIdHandler implements IQueryHandler<GetCustomerByIdQuery> {
+export class GetCustomerByIdHandler
+  implements IQueryHandler<GetCustomerByIdQuery>
+{
   constructor(
     @Inject('ICustomerRepository')
     private readonly customerRepository: ICustomerRepository,
@@ -45,7 +52,9 @@ export class GetCustomerByIdHandler implements IQueryHandler<GetCustomerByIdQuer
 
 @Injectable()
 @QueryHandler(GetCustomerByEmailQuery)
-export class GetCustomerByEmailHandler implements IQueryHandler<GetCustomerByEmailQuery> {
+export class GetCustomerByEmailHandler
+  implements IQueryHandler<GetCustomerByEmailQuery>
+{
   constructor(
     @Inject('ICustomerRepository')
     private readonly customerRepository: ICustomerRepository,
@@ -54,8 +63,10 @@ export class GetCustomerByEmailHandler implements IQueryHandler<GetCustomerByEma
   async execute(query: GetCustomerByEmailQuery): Promise<Customer> {
     const customer = await this.customerRepository.findByEmail(query.email);
     if (!customer) {
-      throw new NotFoundException(`Customer with email ${query.email} not found`);
+      throw new NotFoundException(
+        `Customer with email ${query.email} not found`,
+      );
     }
     return customer;
   }
-} 
+}

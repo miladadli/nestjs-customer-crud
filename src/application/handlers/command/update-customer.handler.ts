@@ -1,4 +1,9 @@
-import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateCustomerCommand } from '../../commands/update-customer.command';
 import { ICustomerRepository } from '../../../domain/repositories/customer.repository.interface';
@@ -9,7 +14,9 @@ import { BankAccount } from '../../../domain/value-objects/bank-account.vo';
 
 @Injectable()
 @CommandHandler(UpdateCustomerCommand)
-export class UpdateCustomerHandler implements ICommandHandler<UpdateCustomerCommand> {
+export class UpdateCustomerHandler
+  implements ICommandHandler<UpdateCustomerCommand>
+{
   constructor(
     @Inject('ICustomerRepository')
     private readonly customerRepository: ICustomerRepository,
@@ -25,14 +32,22 @@ export class UpdateCustomerHandler implements ICommandHandler<UpdateCustomerComm
     // Prepare updated fields
     const firstName = update.firstName ?? customer.getFirstName();
     const lastName = update.lastName ?? customer.getLastName();
-    const dateOfBirth = update.dateOfBirth ? new Date(update.dateOfBirth) : customer.getDateOfBirth();
-    const phoneNumber = update.phoneNumber ? new PhoneNumberVO(update.phoneNumber) : customer.getPhoneNumber();
+    const dateOfBirth = update.dateOfBirth
+      ? new Date(update.dateOfBirth)
+      : customer.getDateOfBirth();
+    const phoneNumber = update.phoneNumber
+      ? new PhoneNumberVO(update.phoneNumber)
+      : customer.getPhoneNumber();
     const email = update.email ? new Email(update.email) : customer.getEmail();
-    const bankAccountNumber = update.bankAccountNumber ? new BankAccount(update.bankAccountNumber) : customer.getBankAccountNumber();
+    const bankAccountNumber = update.bankAccountNumber
+      ? new BankAccount(update.bankAccountNumber)
+      : customer.getBankAccountNumber();
 
     // Uniqueness checks
     if (update.email && update.email !== customer.getEmail().getValue()) {
-      const existingByEmail = await this.customerRepository.findByEmail(update.email);
+      const existingByEmail = await this.customerRepository.findByEmail(
+        update.email,
+      );
       if (existingByEmail && existingByEmail.getId() !== id) {
         throw new ConflictException('Customer with this email already exists');
       }
@@ -40,15 +55,20 @@ export class UpdateCustomerHandler implements ICommandHandler<UpdateCustomerComm
     if (
       (update.firstName && update.firstName !== customer.getFirstName()) ||
       (update.lastName && update.lastName !== customer.getLastName()) ||
-      (update.dateOfBirth && new Date(update.dateOfBirth).getTime() !== customer.getDateOfBirth().getTime())
+      (update.dateOfBirth &&
+        new Date(update.dateOfBirth).getTime() !==
+          customer.getDateOfBirth().getTime())
     ) {
-      const existingByName = await this.customerRepository.findByFullNameAndDateOfBirth(
-        firstName,
-        lastName,
-        dateOfBirth,
-      );
+      const existingByName =
+        await this.customerRepository.findByFullNameAndDateOfBirth(
+          firstName,
+          lastName,
+          dateOfBirth,
+        );
       if (existingByName && existingByName.getId() !== id) {
-        throw new ConflictException('Customer with this name and date of birth already exists');
+        throw new ConflictException(
+          'Customer with this name and date of birth already exists',
+        );
       }
     }
 
@@ -66,4 +86,4 @@ export class UpdateCustomerHandler implements ICommandHandler<UpdateCustomerComm
     );
     return await this.customerRepository.update(updatedCustomer);
   }
-} 
+}

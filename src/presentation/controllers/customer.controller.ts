@@ -24,7 +24,11 @@ import { CustomerDto } from '../../application/dtos/customer.dto';
 import { CreateCustomerCommand } from '../../application/commands/create-customer.command';
 import { UpdateCustomerCommand } from '../../application/commands/update-customer.command';
 import { DeleteCustomerCommand } from '../../application/commands/delete-customer.command';
-import { GetCustomersQuery, GetCustomerByIdQuery, GetCustomerByEmailQuery } from '../../application/queries/get-customers.query';
+import {
+  GetCustomersQuery,
+  GetCustomerByIdQuery,
+  GetCustomerByEmailQuery,
+} from '../../application/queries/get-customers.query';
 import { Customer } from '../../domain/entities/customer.entity';
 
 @ApiTags('customers')
@@ -51,7 +55,9 @@ export class CustomerController {
     status: 409,
     description: 'Customer already exists (email or name+DOB)',
   })
-  async createCustomer(@Body() createCustomerDto: CreateCustomerDto): Promise<CustomerDto> {
+  async createCustomer(
+    @Body() createCustomerDto: CreateCustomerDto,
+  ): Promise<CustomerDto> {
     const command = CreateCustomerCommand.fromDto(createCustomerDto);
     const customer = await this.commandBus.execute(command);
     return this.toCustomerDto(customer);
@@ -60,9 +66,16 @@ export class CustomerController {
   @Put(':id')
   @ApiOperation({ summary: 'Update a customer' })
   @ApiParam({ name: 'id', description: 'Customer ID' })
-  @ApiResponse({ status: 200, description: 'Customer updated', type: CustomerDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Customer updated',
+    type: CustomerDto,
+  })
   @ApiResponse({ status: 404, description: 'Customer not found' })
-  @ApiResponse({ status: 409, description: 'Customer already exists (email or name+DOB)' })
+  @ApiResponse({
+    status: 409,
+    description: 'Customer already exists (email or name+DOB)',
+  })
   async updateCustomer(
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
@@ -85,8 +98,16 @@ export class CustomerController {
 
   @Get()
   @ApiOperation({ summary: 'Get all customers with pagination' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Number of customers to return' })
-  @ApiQuery({ name: 'offset', required: false, description: 'Number of customers to skip' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of customers to return',
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description: 'Number of customers to skip',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of customers',
@@ -95,11 +116,18 @@ export class CustomerController {
   async getCustomers(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
-  ): Promise<{ data: CustomerDto[]; total: number; limit: number; offset: number }> {
+  ): Promise<{
+    data: CustomerDto[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
     const query = new GetCustomersQuery(limit, offset);
     const result = await this.queryBus.execute(query);
     return {
-      data: result.data.map((customer: Customer) => this.toCustomerDto(customer)),
+      data: result.data.map((customer: Customer) =>
+        this.toCustomerDto(customer),
+      ),
       total: result.total,
       limit: result.limit,
       offset: result.offset,
@@ -136,7 +164,9 @@ export class CustomerController {
     status: 404,
     description: 'Customer not found',
   })
-  async getCustomerByEmail(@Param('email') email: string): Promise<CustomerDto> {
+  async getCustomerByEmail(
+    @Param('email') email: string,
+  ): Promise<CustomerDto> {
     const query = new GetCustomerByEmailQuery(email);
     const customer = await this.queryBus.execute(query);
     return this.toCustomerDto(customer);
@@ -157,4 +187,4 @@ export class CustomerController {
       updatedAt: customer.getUpdatedAt().toISOString(),
     };
   }
-} 
+}

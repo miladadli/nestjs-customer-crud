@@ -64,4 +64,4 @@ export class BankAccount {
   toString(): string {
     return this.value;
   }
-} 
+}

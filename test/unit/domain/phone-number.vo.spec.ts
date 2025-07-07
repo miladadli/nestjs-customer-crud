@@ -12,12 +12,16 @@ describe('PhoneNumberVO Value Object', () => {
   });
 
   it('should throw error for invalid phone number', () => {
-    expect(() => new PhoneNumberVO('12345')).toThrow('Invalid phone number format');
+    expect(() => new PhoneNumberVO('12345')).toThrow(
+      'Invalid phone number format',
+    );
   });
 
   it('should throw error for non-mobile number', () => {
     // Example US toll-free (not mobile)
-    expect(() => new PhoneNumberVO('+18005550199')).toThrow('Phone number must be a mobile number');
+    expect(() => new PhoneNumberVO('+18005550199')).toThrow(
+      'Phone number must be a valid mobile number',
+    );
   });
 
   it('should compare equality correctly', () => {

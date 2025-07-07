@@ -5,4 +5,4 @@ export class UpdateCustomerCommand {
     public readonly id: string,
     public readonly update: UpdateCustomerDto,
   ) {}
-} 
+}

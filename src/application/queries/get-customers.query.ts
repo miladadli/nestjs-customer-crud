@@ -18,4 +18,4 @@ export class GetCustomerByIdQuery {
 
 export class GetCustomerByEmailQuery {
   constructor(public readonly email: string) {}
-} 
+}

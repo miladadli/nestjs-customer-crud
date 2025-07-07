@@ -9,7 +9,9 @@ import { BankAccount } from '../../../domain/value-objects/bank-account.vo';
 
 @Injectable()
 @CommandHandler(CreateCustomerCommand)
-export class CreateCustomerHandler implements ICommandHandler<CreateCustomerCommand> {
+export class CreateCustomerHandler
+  implements ICommandHandler<CreateCustomerCommand>
+{
   constructor(
     @Inject('ICustomerRepository')
     private readonly customerRepository: ICustomerRepository,
@@ -22,19 +24,24 @@ export class CreateCustomerHandler implements ICommandHandler<CreateCustomerComm
     const bankAccountNumber = new BankAccount(command.bankAccountNumber);
 
     // Check if customer already exists by email
-    const existingCustomerByEmail = await this.customerRepository.findByEmail(email.getValue());
+    const existingCustomerByEmail = await this.customerRepository.findByEmail(
+      email.getValue(),
+    );
     if (existingCustomerByEmail) {
       throw new ConflictException('Customer with this email already exists');
     }
 
     // Check if customer already exists by full name and date of birth
-    const existingCustomerByName = await this.customerRepository.findByFullNameAndDateOfBirth(
-      command.firstName,
-      command.lastName,
-      command.dateOfBirth,
-    );
+    const existingCustomerByName =
+      await this.customerRepository.findByFullNameAndDateOfBirth(
+        command.firstName,
+        command.lastName,
+        command.dateOfBirth,
+      );
     if (existingCustomerByName) {
-      throw new ConflictException('Customer with this name and date of birth already exists');
+      throw new ConflictException(
+        'Customer with this name and date of birth already exists',
+      );
     }
 
     // Create customer entity
@@ -50,4 +57,4 @@ export class CreateCustomerHandler implements ICommandHandler<CreateCustomerComm
     // Save to repository
     return await this.customerRepository.create(customer);
   }
-} 
+}

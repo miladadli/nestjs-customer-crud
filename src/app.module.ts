@@ -8,7 +8,11 @@ import { CustomerController } from './presentation/controllers/customer.controll
 import { CreateCustomerHandler } from './application/handlers/command/create-customer.handler';
 import { UpdateCustomerHandler } from './application/handlers/command/update-customer.handler';
 import { DeleteCustomerHandler } from './application/handlers/command/delete-customer.handler';
-import { GetCustomersHandler, GetCustomerByIdHandler, GetCustomerByEmailHandler } from './application/handlers/query/get-customers.handler';
+import {
+  GetCustomersHandler,
+  GetCustomerByIdHandler,
+  GetCustomerByEmailHandler,
+} from './application/handlers/query/get-customers.handler';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 

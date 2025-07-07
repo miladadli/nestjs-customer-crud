@@ -21,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
-      
+
       if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
         message = (exceptionResponse as any).message || exception.message;
         error = (exceptionResponse as any).error || exception.message;
@@ -45,4 +45,4 @@ export class HttpExceptionFilter implements ExceptionFilter {
     console.error(exception);
     response.status(status).json(errorResponse);
   }
-} 
+}

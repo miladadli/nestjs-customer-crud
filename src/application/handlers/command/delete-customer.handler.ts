@@ -5,7 +5,9 @@ import { ICustomerRepository } from '../../../domain/repositories/customer.repos
 
 @Injectable()
 @CommandHandler(DeleteCustomerCommand)
-export class DeleteCustomerHandler implements ICommandHandler<DeleteCustomerCommand> {
+export class DeleteCustomerHandler
+  implements ICommandHandler<DeleteCustomerCommand>
+{
   constructor(
     @Inject('ICustomerRepository')
     private readonly customerRepository: ICustomerRepository,
@@ -18,4 +20,4 @@ export class DeleteCustomerHandler implements ICommandHandler<DeleteCustomerComm
     }
     await this.customerRepository.delete(command.id);
   }
-} 
+}

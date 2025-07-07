@@ -23,24 +23,24 @@ export class CustomerOrmEntity {
   @Column({ name: 'date_of_birth', type: 'date' })
   dateOfBirth: Date;
 
-  @Column({ 
-    name: 'phone_number', 
-    type: 'varchar', 
-    length: 20 
+  @Column({
+    name: 'phone_number',
+    type: 'varchar',
+    length: 20,
   })
   phoneNumber: string;
 
-  @Column({ 
-    name: 'email', 
-    type: 'varchar', 
-    length: 255 
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    length: 255,
   })
   email: string;
 
-  @Column({ 
-    name: 'bank_account_number', 
-    type: 'varchar', 
-    length: 20 
+  @Column({
+    name: 'bank_account_number',
+    type: 'varchar',
+    length: 20,
   })
   bankAccountNumber: string;
 
@@ -49,4 +49,4 @@ export class CustomerOrmEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-} 
+}

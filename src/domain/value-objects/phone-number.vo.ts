@@ -7,7 +7,10 @@ export class PhoneNumberVO {
   constructor(phoneNumber: string, countryCode: string = 'US') {
     this.validate(phoneNumber, countryCode);
     this.value = phoneNumber;
-    this.phoneNumber = PhoneNumberUtil.getInstance().parseAndKeepRawInput(phoneNumber, countryCode);
+    this.phoneNumber = PhoneNumberUtil.getInstance().parseAndKeepRawInput(
+      phoneNumber,
+      countryCode,
+    );
   }
 
   private validate(phoneNumber: string, countryCode: string): void {
@@ -17,7 +20,10 @@ export class PhoneNumberVO {
 
     const libphonenumber = require('google-libphonenumber');
     const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
-    const parsedNumber = phoneUtil.parseAndKeepRawInput(phoneNumber, countryCode);
+    const parsedNumber = phoneUtil.parseAndKeepRawInput(
+      phoneNumber,
+      countryCode,
+    );
 
     if (!phoneUtil.isValidNumber(parsedNumber)) {
       throw new Error('Invalid phone number format');
@@ -59,4 +65,4 @@ export class PhoneNumberVO {
   toString(): string {
     return this.getFormattedNumber();
   }
-} 
+}

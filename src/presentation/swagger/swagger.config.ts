@@ -4,14 +4,16 @@ import { INestApplication } from '@nestjs/common';
 export function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle('Customer CRUD API')
-    .setDescription('A RESTful API for managing customers with clean architecture and CQRS pattern')
+    .setDescription(
+      'A RESTful API for managing customers with clean architecture and CQRS pattern',
+    )
     .setVersion('1.0')
     .addTag('customers', 'Customer management operations')
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  
+
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
@@ -25,4 +27,4 @@ export function setupSwagger(app: INestApplication): void {
       .swagger-ui .info .title { color: #3b82f6; }
     `,
   });
-} 
+}

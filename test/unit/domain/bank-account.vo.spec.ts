@@ -8,23 +8,33 @@ describe('BankAccount Value Object', () => {
   });
 
   it('should throw error for empty account number', () => {
-    expect(() => new BankAccount('')).toThrow('Bank account number cannot be empty');
+    expect(() => new BankAccount('')).toThrow(
+      'Bank account number cannot be empty',
+    );
   });
 
   it('should throw error for non-digit account number', () => {
-    expect(() => new BankAccount('abc123')).toThrow('Bank account number must contain only digits');
+    expect(() => new BankAccount('abc123')).toThrow(
+      'Bank account number must contain only digits',
+    );
   });
 
   it('should throw error for too short account number', () => {
-    expect(() => new BankAccount('1234567')).toThrow('Bank account number must be between 8 and 17 digits');
+    expect(() => new BankAccount('1234567')).toThrow(
+      'Bank account number must be between 8 and 17 digits',
+    );
   });
 
   it('should throw error for too long account number', () => {
-    expect(() => new BankAccount('123456789012345678')).toThrow('Bank account number must be between 8 and 17 digits');
+    expect(() => new BankAccount('123456789012345678')).toThrow(
+      'Bank account number must be between 8 and 17 digits',
+    );
   });
 
   it('should throw error for invalid Luhn checksum', () => {
-    expect(() => new BankAccount('123456789')).toThrow('Invalid bank account number checksum');
+    expect(() => new BankAccount('123456789')).toThrow(
+      'Invalid bank account number checksum',
+    );
   });
 
   it('should mask the account number', () => {

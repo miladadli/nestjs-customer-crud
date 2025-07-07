@@ -20,4 +20,4 @@ export class CreateCustomerCommand {
       dto.bankAccountNumber,
     );
   }
-} 
+}

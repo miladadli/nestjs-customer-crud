@@ -27,7 +27,9 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
   }
 
   async findByEmail(email: string): Promise<Customer | null> {
-    const ormEntity = await this.customerRepository.findOne({ where: { email } });
+    const ormEntity = await this.customerRepository.findOne({
+      where: { email },
+    });
     return ormEntity ? this.toDomainEntity(ormEntity) : null;
   }
 
@@ -44,7 +46,7 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
 
   async findAll(): Promise<Customer[]> {
     const ormEntities = await this.customerRepository.find();
-    return ormEntities.map(entity => this.toDomainEntity(entity));
+    return ormEntities.map((entity) => this.toDomainEntity(entity));
   }
 
   async findMany(limit?: number, offset?: number): Promise<Customer[]> {
@@ -53,7 +55,7 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
       skip: offset,
       order: { createdAt: 'DESC' },
     });
-    return ormEntities.map(entity => this.toDomainEntity(entity));
+    return ormEntities.map((entity) => this.toDomainEntity(entity));
   }
 
   async update(customer: Customer): Promise<Customer> {
@@ -115,4 +117,4 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
       ormEntity.updatedAt,
     );
   }
-} 
+}

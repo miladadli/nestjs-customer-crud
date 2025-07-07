@@ -1,10 +1,19 @@
-import { IsString, IsEmail, IsDateString, IsNotEmpty, IsMobilePhone, MinLength, MaxLength, Matches } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsDateString,
+  IsNotEmpty,
+  IsMobilePhone,
+  MinLength,
+  MaxLength,
+  Matches,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCustomerDto {
   @ApiProperty({
     description: 'Customer first name',
-    example: 'John',
+    example: 'Milad',
     minLength: 1,
     maxLength: 100,
   })
@@ -19,7 +28,7 @@ export class CreateCustomerDto {
 
   @ApiProperty({
     description: 'Customer last name',
-    example: 'Doe',
+    example: 'Adli',
     minLength: 1,
     maxLength: 100,
   })
@@ -41,7 +50,7 @@ export class CreateCustomerDto {
 
   @ApiProperty({
     description: 'Customer mobile phone number',
-    example: '+1234567890',
+    example: '+989370147529',
   })
   @IsMobilePhone()
   phoneNumber: string;
@@ -67,4 +76,4 @@ export class CreateCustomerDto {
     message: 'Bank account number must contain only digits',
   })
   bankAccountNumber: string;
-} 
+}
