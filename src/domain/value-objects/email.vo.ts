@@ -1,0 +1,32 @@
+export class Email {
+  private readonly value: string;
+
+  constructor(email: string) {
+    const normalized = email.toLowerCase().trim();
+    this.validate(normalized);
+    this.value = normalized;
+  }
+
+  private validate(email: string): void {
+    if (!email || email.trim().length === 0) {
+      throw new Error('Email cannot be empty');
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error('Invalid email format');
+    }
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+
+  equals(other: Email): boolean {
+    return this.value === other.value;
+  }
+
+  toString(): string {
+    return this.value;
+  }
+}
