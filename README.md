@@ -48,3 +48,57 @@ Create a NestJS template project
 ## Nice to do:
 - Front-end Web (React)
 - Docker-compose project that loads the database service automatically, which `docker-compose up`
+
+## Getting Started
+
+### Prerequisites
+- [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/) v20+ and [npm](https://www.npmjs.com/) (for local development)
+
+### Running the Database with Docker Compose
+
+1. Start the PostgreSQL database:
+   ```sh
+   docker compose up -d db
+   ```
+   This will start the database service defined in `docker-compose.yml`.
+
+2. (Optional) To run the backend in Docker as well, ensure you have a `Dockerfile` and uncomment the `app` service in `docker-compose.yml`, then run:
+   ```sh
+   docker compose up --build
+   ```
+
+### Running the Backend Locally
+
+1. Install dependencies:
+   ```sh
+   npm install
+   ```
+2. Copy `.env.example` to `.env` and adjust if needed (see below for DB connection):
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=postgres
+   DB_NAME=customer_crud
+   ```
+3. Start the backend:
+   ```sh
+   npm run start:dev
+   ```
+4. Access Swagger UI at [http://localhost:3000/api](http://localhost:3000/api)
+
+### Running Tests
+
+- **Unit tests:**
+  ```sh
+  npm run test
+  ```
+- **End-to-end (e2e) tests:**
+  ```sh
+  npm run test:e2e
+  ```
+
+---
+
+**For any issues, ensure your database is running and your environment variables are set correctly.**
