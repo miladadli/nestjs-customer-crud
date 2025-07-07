@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateCustomerCommand } from '../../commands/create-customer.command';
 import { ICustomerRepository } from '../../../domain/repositories/customer.repository.interface';
@@ -10,7 +10,10 @@ import { BankAccount } from '../../../domain/value-objects/bank-account.vo';
 @Injectable()
 @CommandHandler(CreateCustomerCommand)
 export class CreateCustomerHandler implements ICommandHandler<CreateCustomerCommand> {
-  constructor(private readonly customerRepository: ICustomerRepository) {}
+  constructor(
+    @Inject('ICustomerRepository')
+    private readonly customerRepository: ICustomerRepository,
+  ) {}
 
   async execute(command: CreateCustomerCommand): Promise<Customer> {
     // Create value objects

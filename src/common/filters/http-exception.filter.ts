@@ -42,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message: Array.isArray(message) ? message[0] : message,
       error: error,
     };
-
+    console.error(exception);
     response.status(status).json(errorResponse);
   }
 } 

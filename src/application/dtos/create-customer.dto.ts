@@ -55,7 +55,7 @@ export class CreateCustomerDto {
 
   @ApiProperty({
     description: 'Customer bank account number',
-    example: '1234567890123456',
+    example: '79927398713',
     minLength: 8,
     maxLength: 17,
   })

@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -17,8 +19,11 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { CreateCustomerDto } from '../../application/dtos/create-customer.dto';
+import { UpdateCustomerDto } from '../../application/dtos/update-customer.dto';
 import { CustomerDto } from '../../application/dtos/customer.dto';
 import { CreateCustomerCommand } from '../../application/commands/create-customer.command';
+import { UpdateCustomerCommand } from '../../application/commands/update-customer.command';
+import { DeleteCustomerCommand } from '../../application/commands/delete-customer.command';
 import { GetCustomersQuery, GetCustomerByIdQuery, GetCustomerByEmailQuery } from '../../application/queries/get-customers.query';
 import { Customer } from '../../domain/entities/customer.entity';
 
@@ -52,6 +57,32 @@ export class CustomerController {
     return this.toCustomerDto(customer);
   }
 
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiResponse({ status: 200, description: 'Customer updated', type: CustomerDto })
+  @ApiResponse({ status: 404, description: 'Customer not found' })
+  @ApiResponse({ status: 409, description: 'Customer already exists (email or name+DOB)' })
+  async updateCustomer(
+    @Param('id') id: string,
+    @Body() updateCustomerDto: UpdateCustomerDto,
+  ): Promise<CustomerDto> {
+    const command = new UpdateCustomerCommand(id, updateCustomerDto);
+    const customer = await this.commandBus.execute(command);
+    return this.toCustomerDto(customer);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a customer' })
+  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiResponse({ status: 204, description: 'Customer deleted' })
+  @ApiResponse({ status: 404, description: 'Customer not found' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteCustomer(@Param('id') id: string): Promise<void> {
+    const command = new DeleteCustomerCommand(id);
+    await this.commandBus.execute(command);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all customers with pagination' })
   @ApiQuery({ name: 'limit', required: false, description: 'Number of customers to return' })
@@ -64,10 +95,15 @@ export class CustomerController {
   async getCustomers(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
-  ): Promise<CustomerDto[]> {
+  ): Promise<{ data: CustomerDto[]; total: number; limit: number; offset: number }> {
     const query = new GetCustomersQuery(limit, offset);
-    const customers: Customer[] = await this.queryBus.execute(query);
-    return customers.map((customer: Customer) => this.toCustomerDto(customer));
+    const result = await this.queryBus.execute(query);
+    return {
+      data: result.data.map((customer: Customer) => this.toCustomerDto(customer)),
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+    };
   }
 
   @Get(':id')
@@ -108,7 +144,7 @@ export class CustomerController {
 
   private toCustomerDto(customer: Customer): CustomerDto {
     return {
-      id: customer.getId(),
+      id: customer.getId() ?? '',
       firstName: customer.getFirstName(),
       lastName: customer.getLastName(),
       fullName: customer.getFullName(),

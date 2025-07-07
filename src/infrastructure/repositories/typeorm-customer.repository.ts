@@ -88,7 +88,9 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
 
   private toOrmEntity(customer: Customer): CustomerOrmEntity {
     const ormEntity = new CustomerOrmEntity();
-    ormEntity.id = customer.getId();
+    if (customer.getId()) {
+      ormEntity.id = customer.getId()!;
+    }
     ormEntity.firstName = customer.getFirstName();
     ormEntity.lastName = customer.getLastName();
     ormEntity.dateOfBirth = customer.getDateOfBirth();
@@ -105,7 +107,7 @@ export class TypeOrmCustomerRepository implements ICustomerRepository {
       ormEntity.id,
       ormEntity.firstName,
       ormEntity.lastName,
-      ormEntity.dateOfBirth,
+      new Date(ormEntity.dateOfBirth),
       new PhoneNumberVO(ormEntity.phoneNumber),
       new Email(ormEntity.email),
       new BankAccount(ormEntity.bankAccountNumber),

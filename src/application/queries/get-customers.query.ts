@@ -5,6 +5,13 @@ export class GetCustomersQuery {
   ) {}
 }
 
+export type PaginatedCustomersResult = {
+  data: any[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
 export class GetCustomerByIdQuery {
   constructor(public readonly id: string) {}
 }

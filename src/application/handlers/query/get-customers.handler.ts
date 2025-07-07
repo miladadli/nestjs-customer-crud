@@ -1,23 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { GetCustomersQuery, GetCustomerByIdQuery, GetCustomerByEmailQuery } from '../../queries/get-customers.query';
+import { GetCustomersQuery, GetCustomerByIdQuery, GetCustomerByEmailQuery, PaginatedCustomersResult } from '../../queries/get-customers.query';
 import { ICustomerRepository } from '../../../domain/repositories/customer.repository.interface';
 import { Customer } from '../../../domain/entities/customer.entity';
 
 @Injectable()
 @QueryHandler(GetCustomersQuery)
 export class GetCustomersHandler implements IQueryHandler<GetCustomersQuery> {
-  constructor(private readonly customerRepository: ICustomerRepository) {}
+  constructor(
+    @Inject('ICustomerRepository')
+    private readonly customerRepository: ICustomerRepository,
+  ) {}
 
-  async execute(query: GetCustomersQuery): Promise<Customer[]> {
-    return await this.customerRepository.findMany(query.limit, query.offset);
+  async execute(query: GetCustomersQuery): Promise<PaginatedCustomersResult> {
+    const [data, total] = await Promise.all([
+      this.customerRepository.findMany(query.limit, query.offset),
+      this.customerRepository.count(),
+    ]);
+    return {
+      data,
+      total,
+      limit: query.limit ?? 0,
+      offset: query.offset ?? 0,
+    };
   }
 }
 
 @Injectable()
 @QueryHandler(GetCustomerByIdQuery)
 export class GetCustomerByIdHandler implements IQueryHandler<GetCustomerByIdQuery> {
-  constructor(private readonly customerRepository: ICustomerRepository) {}
+  constructor(
+    @Inject('ICustomerRepository')
+    private readonly customerRepository: ICustomerRepository,
+  ) {}
 
   async execute(query: GetCustomerByIdQuery): Promise<Customer> {
     const customer = await this.customerRepository.findById(query.id);
@@ -31,7 +46,10 @@ export class GetCustomerByIdHandler implements IQueryHandler<GetCustomerByIdQuer
 @Injectable()
 @QueryHandler(GetCustomerByEmailQuery)
 export class GetCustomerByEmailHandler implements IQueryHandler<GetCustomerByEmailQuery> {
-  constructor(private readonly customerRepository: ICustomerRepository) {}
+  constructor(
+    @Inject('ICustomerRepository')
+    private readonly customerRepository: ICustomerRepository,
+  ) {}
 
   async execute(query: GetCustomerByEmailQuery): Promise<Customer> {
     const customer = await this.customerRepository.findByEmail(query.email);

@@ -3,7 +3,7 @@ import { PhoneNumberVO } from '../value-objects/phone-number.vo';
 import { BankAccount } from '../value-objects/bank-account.vo';
 
 export class Customer {
-  private readonly id: string;
+  private readonly id?: string;
   private readonly firstName: string;
   private readonly lastName: string;
   private readonly dateOfBirth: Date;
@@ -14,7 +14,7 @@ export class Customer {
   private readonly updatedAt: Date;
 
   constructor(
-    id: string,
+    id: string | undefined,
     firstName: string,
     lastName: string,
     dateOfBirth: Date,
@@ -25,7 +25,6 @@ export class Customer {
     updatedAt?: Date,
   ) {
     this.validate(firstName, lastName, dateOfBirth);
-    
     this.id = id;
     this.firstName = firstName.trim();
     this.lastName = lastName.trim();
@@ -41,19 +40,15 @@ export class Customer {
     if (!firstName || firstName.trim().length === 0) {
       throw new Error('First name cannot be empty');
     }
-
     if (!lastName || lastName.trim().length === 0) {
       throw new Error('Last name cannot be empty');
     }
-
     if (!dateOfBirth) {
       throw new Error('Date of birth cannot be empty');
     }
-
     if (dateOfBirth > new Date()) {
       throw new Error('Date of birth cannot be in the future');
     }
-
     const age = this.calculateAge(dateOfBirth);
     if (age < 18) {
       throw new Error('Customer must be at least 18 years old');
@@ -64,56 +59,42 @@ export class Customer {
     const today = new Date();
     let age = today.getFullYear() - dateOfBirth.getFullYear();
     const monthDiff = today.getMonth() - dateOfBirth.getMonth();
-    
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dateOfBirth.getDate())) {
       age--;
     }
-    
     return age;
   }
 
-  // Getters
-  getId(): string {
+  getId(): string | undefined {
     return this.id;
   }
-
   getFirstName(): string {
     return this.firstName;
   }
-
   getLastName(): string {
     return this.lastName;
   }
-
   getFullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
-
   getDateOfBirth(): Date {
     return this.dateOfBirth;
   }
-
   getPhoneNumber(): PhoneNumberVO {
     return this.phoneNumber;
   }
-
   getEmail(): Email {
     return this.email;
   }
-
   getBankAccountNumber(): BankAccount {
     return this.bankAccountNumber;
   }
-
   getCreatedAt(): Date {
     return this.createdAt;
   }
-
   getUpdatedAt(): Date {
     return this.updatedAt;
   }
-
-  // Business methods
   isSamePerson(other: Customer): boolean {
     return (
       this.firstName.toLowerCase() === other.firstName.toLowerCase() &&
@@ -121,16 +102,12 @@ export class Customer {
       this.dateOfBirth.getTime() === other.dateOfBirth.getTime()
     );
   }
-
   hasSameEmail(other: Customer): boolean {
     return this.email.equals(other.email);
   }
-
   getAge(): number {
     return this.calculateAge(this.dateOfBirth);
   }
-
-  // Factory method for creating a new customer
   static create(
     firstName: string,
     lastName: string,
@@ -139,11 +116,15 @@ export class Customer {
     email: Email,
     bankAccountNumber: BankAccount,
   ): Customer {
-    const id = this.generateId();
-    return new Customer(id, firstName, lastName, dateOfBirth, phoneNumber, email, bankAccountNumber);
-  }
-
-  private static generateId(): string {
-    return `customer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Let DB generate the id
+    return new Customer(
+      undefined,
+      firstName,
+      lastName,
+      dateOfBirth,
+      phoneNumber,
+      email,
+      bankAccountNumber,
+    );
   }
 } 
